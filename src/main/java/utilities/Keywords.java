@@ -1,14 +1,29 @@
 package utilities;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -30,6 +45,18 @@ public class Keywords {
 	}
 
 	// ==================================================|Do|==================================================
+	/**
+	 * Converts the color RGBA to hexadecimal value.
+	 * 
+	 * @param strColor - the colors RGBA value to be converted.
+	 * @return Returns the Hexadecimal value of the color.
+	 */
+	public String convertColorToHexadecimal(String strColor) {
+		String strHex = Color.fromString(strColor).asHex();
+
+		return strHex;
+	}
+
 	/**
 	 * Waits for the mobile element to be visible then clears the value in the web
 	 * element.
@@ -236,18 +263,83 @@ public class Keywords {
 	}
 
 	/**
-	 * Converts the color RGBA to hexadecimal value.
+	 * Take screenshot.
 	 * 
-	 * @param strColor - the colors RGBA value to be converted.
-	 * @return Returns the Hexadecimal value of the color.
+	 * @param filePath - string where the image is saved.
 	 */
-	public String convertColorToHexadecimal(String strColor) {
-		String strHex = Color.fromString(strColor).asHex();
+	public void takeScreenshot(String strFilePath) throws Exception {
+		TakesScreenshot screenshot = ((TakesScreenshot) appiumDriver);
+		File fileSource = screenshot.getScreenshotAs(OutputType.FILE);
+		File fileDestination = new File(strFilePath);
 
-		return strHex;
+		FileUtils.copyFile(fileSource, fileDestination);
+	}
+
+	/**
+	 * Take screenshot of web element. Width and Height percentage optional.
+	 * 
+	 * @param mobileElement       - mobile element to screenshot.
+	 * @param intWidthPercentage  - width percentage of web element.
+	 * @param intHeightPercentage - height percentage of web element.
+	 * @param strFilePath         - string where the image is saved.
+	 */
+	public void takeScreenshotOfMobileElement(MobileElement mobileElement, int intWidthPercentage,
+			int intHeightPercentage, String strFilePath) throws Exception {
+		File screenshot = ((TakesScreenshot) appiumDriver).getScreenshotAs(OutputType.FILE);
+		BufferedImage fullImage = ImageIO.read(screenshot);
+		Point point = mobileElement.getLocation();
+		int intWebElementWidth = mobileElement.getSize().getWidth();
+		int intWebElementHeight = mobileElement.getSize().getHeight();
+
+		if (intWidthPercentage != 0) {
+			intWebElementWidth = intWebElementWidth * (intWidthPercentage / 100);
+		}
+
+		if (intHeightPercentage != 0) {
+			intWebElementHeight = intWebElementHeight * (intHeightPercentage / 100);
+		}
+
+		BufferedImage webElementScreenshot = fullImage.getSubimage(point.getX(), point.getY(), intWebElementWidth,
+				intWebElementHeight);
+
+		ImageIO.write(webElementScreenshot, "png", screenshot);
+
+		File screenshotLocation = new File(strFilePath);
+
+		FileUtils.copyFile(screenshot, screenshotLocation);
 	}
 
 	// ==================================================|See|==================================================
+	/**
+	 * Get all data from the specified row in the Excel file and return a array of
+	 * String.
+	 * 
+	 * @param strFilePath    - Excel file path.
+	 * @param intSheetNumber - Excel sheet number starts from 0.
+	 * @param intRowNumber   - Excel row number starts from 0.
+	 * @return Returns a array list of String.
+	 */
+	public ArrayList<String> getExcelRowData(String strFilePath, int intSheetNumber, int intRowNumber)
+			throws Exception {
+		FileInputStream fileInputStream = new FileInputStream(strFilePath);
+		XSSFWorkbook workBook = new XSSFWorkbook(fileInputStream);
+		Sheet sheet = workBook.getSheetAt(intSheetNumber);
+		Row row = sheet.getRow(intRowNumber);
+		ArrayList<String> arrayListStrRowData = new ArrayList<String>();
+
+		for (Cell cell : row) {
+			DataFormatter dataFormatter = new DataFormatter();
+			String strCellData = dataFormatter.formatCellValue(cell);
+
+			arrayListStrRowData.add(strCellData);
+		}
+
+		workBook.close();
+		fileInputStream.close();
+
+		return arrayListStrRowData;
+	}
+
 	/**
 	 * Checks if the mobile element is displayed or not.
 	 * 
@@ -308,6 +400,31 @@ public class Keywords {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get single cell data from Excel file and return the value as String.
+	 * 
+	 * @param strFilePath     - Excel file path.
+	 * @param intSheetNumber  - Excel sheet number starts from 0.
+	 * @param intRowNumber    - Excel row number starts from 0.
+	 * @param intColumnNumber - Excel cell number starts from 0.
+	 * @return Returns a string output.
+	 */
+	public String getExcelCellData(String strFilePath, int intSheetNumber, int intRowNumber, int intColumnNumber)
+			throws Exception {
+		FileInputStream fileInputStream = new FileInputStream(strFilePath);
+		XSSFWorkbook workBook = new XSSFWorkbook(fileInputStream);
+		Sheet sheet = workBook.getSheetAt(intSheetNumber);
+		Row row = sheet.getRow(intRowNumber);
+		Cell cell = row.getCell(intColumnNumber);
+		DataFormatter dataFormatter = new DataFormatter();
+		String strCellData = dataFormatter.formatCellValue(cell);
+
+		workBook.close();
+		fileInputStream.close();
+
+		return strCellData;
 	}
 
 	/**
