@@ -52,17 +52,17 @@ public class Keywords {
 	 * Submit a Rest API Delete Request and will return a response output. If
 	 * requestBody is not needed just leave the parameter as blank a string.
 	 * 
-	 * @param requestURL  - Set Rest request URL.
-	 * @param requestBody - Set Json body as string.
+	 * @param strRequestURL  - Set Rest request URL.
+	 * @param strRequestBody - Set Json body as string.
 	 * @return Response type as output.
 	 */
-	public Response restDelete(String requestURL, String requestBody) {
+	public Response restDelete(String strRequestURL, String strRequestBody) {
 		RequestSpecification request = RestAssured.given();
 
 		request.header("Content-Type", "application/json");
-		request.body(requestBody);
+		request.body(strRequestBody);
 
-		Response response = request.delete(requestURL);
+		Response response = request.delete(strRequestURL);
 
 		return response;
 	}
@@ -71,17 +71,17 @@ public class Keywords {
 	 * Submit a Rest API Get Request and will return a response output. If
 	 * requestBody is not needed just leave the parameter as blank a string.
 	 * 
-	 * @param requestURL  - Set Rest request URL.
-	 * @param requestBody - Set Json body as string.
+	 * @param strRequestURL  - Set Rest request URL.
+	 * @param strRequestBody - Set Json body as string.
 	 * @return Response type as output.
 	 */
-	public Response restGet(String requestURL, String requestBody) {
+	public Response restGet(String strRequestURL, String strRequestBody) {
 		RequestSpecification request = RestAssured.given();
 
 		request.header("Content-Type", "application/json");
-		request.body(requestBody);
+		request.body(strRequestBody);
 
-		Response response = request.get(requestURL);
+		Response response = request.get(strRequestURL);
 
 		return response;
 	}
@@ -90,17 +90,17 @@ public class Keywords {
 	 * Submit a Rest API Post Request and will return a response output. If
 	 * requestBody is not needed just leave the parameter as blank a string.
 	 * 
-	 * @param requestURL  - Set Rest request URL.
-	 * @param requestBody - Set Json body as string.
+	 * @param strRequestURL  - Set Rest request URL.
+	 * @param strRequestBody - Set Json body as string.
 	 * @return Response type as output.
 	 */
-	public Response restPost(String requestURL, String requestBody) {
+	public Response restPost(String strRequestURL, String strRequestBody) {
 		RequestSpecification request = RestAssured.given();
 
 		request.header("Content-Type", "application/json");
-		request.body(requestBody);
+		request.body(strRequestBody);
 
-		Response response = request.post(requestURL);
+		Response response = request.post(strRequestURL);
 
 		return response;
 	}
@@ -109,17 +109,17 @@ public class Keywords {
 	 * Submit a Rest API Put Request and will return a response output. If
 	 * requestBody is not needed just leave the parameter as blank a string.
 	 * 
-	 * @param requestURL  - Set Rest request URL.
-	 * @param requestBody - Set Json body as string.
+	 * @param strRequestURL  - Set Rest request URL.
+	 * @param strRequestBody - Set Json body as string.
 	 * @return Response type as output.
 	 */
-	public Response restPut(String requestURL, String requestBody) {
+	public Response restPut(String strRequestURL, String strRequestBody) {
 		RequestSpecification request = RestAssured.given();
 
 		request.header("Content-Type", "application/json");
-		request.body(requestBody);
+		request.body(strRequestBody);
 
-		Response response = request.put(requestURL);
+		Response response = request.put(strRequestURL);
 
 		return response;
 	}
