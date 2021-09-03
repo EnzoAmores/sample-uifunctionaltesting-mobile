@@ -108,6 +108,15 @@
 			<version>5.0.0</version>
 		</dependency>
 
+		<!-- Rest API -->
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>4.4.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Fix for JDK-16 if the test will be run on Maven (Command Prompt) -->
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
